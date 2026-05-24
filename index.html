@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestor de Contratos IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--surface-2:#f3f0ec;--border:#dcd9d5;
+      --text:#28251d;--text-muted:#7a7974;--primary:#01696f;--primary-h:#0c4e54;
+      --primary-hl:#cedcd8;--error:#a12c7b;--success:#437a22;
+      --radius:.625rem;--shadow:0 2px 12px rgba(0,0,0,.07);
+      --tr:180ms cubic-bezier(.16,1,.3,1);
+    }
+    [data-theme="dark"]{
+      --bg:#171614;--surface:#1c1b19;--surface-2:#22211f;--border:#393836;
+      --text:#cdccca;--text-muted:#797876;--primary:#4f98a3;--primary-h:#227f8b;
+      --primary-hl:#313b3b;--error:#d163a7;--success:#6daa45;
+      --shadow:0 2px 12px rgba(0,0,0,.3);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;font-size:1rem;background:var(--bg);color:var(--text);min-height:100dvh;-webkit-font-smoothing:antialiased;transition:background var(--tr),color var(--tr)}
+    button{cursor:pointer;font:inherit;border:none;background:none}
+    input,textarea{font:inherit}
+    .app{max-width:780px;margin:0 auto;padding:2rem 1.25rem 4rem}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem}
+    .logo{display:flex;align-items:center;gap:.625rem}
+    .logo svg{color:var(--primary)}
+    .logo-text{font-size:1.15rem;font-weight:600}
+    .logo-sub{font-size:.8rem;color:var(--text-muted);margin-top:1px}
+    .theme-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);border:1px solid var(--border);transition:background var(--tr),color var(--tr)}
+    .theme-btn:hover{background:var(--surface-2);color:var(--text)}
+    .tabs{display:flex;gap:.25rem;background:var(--surface-2);border-radius:var(--radius);padding:.25rem;margin-bottom:1.75rem}
+    .tab{flex:1;padding:.6rem 1rem;border-radius:calc(var(--radius) - 2px);font-size:.9rem;font-weight:500;color:var(--text-muted);transition:background var(--tr),color var(--tr),box-shadow var(--tr);text-align:center}
+    .tab.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+    .tab:hover:not(.active){color:var(--text)}
+    .panel{display:none}.panel.active{display:block}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;box-shadow:var(--shadow)}
+    .card-title{font-size:1rem;font-weight:600;margin-bottom:.35rem}
+    .card-desc{font-size:.875rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.5}
+    .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2.25rem 1.5rem;text-align:center;cursor:pointer;transition:border-color var(--tr),background var(--tr);position:relative}
+    .upload-zone:hover,.upload-zone.dragover{border-color:var(--primary);background:var(--primary-hl)}
+    .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .upload-icon{color:var(--primary);margin:0 auto .75rem}
+    .upload-title{font-weight:600;margin-bottom:.3rem}
+    .upload-hint{font-size:.8rem;color:var(--text-muted)}
+    .file-chip{display:inline-flex;align-items:center;gap:.4rem;background:var(--primary-hl);color:var(--primary);border-radius:999px;padding:.3rem .75rem;font-size:.825rem;font-weight:500;margin-top:.75rem}
+    .file-chip button{width:16px;height:16px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:var(--primary);font-size:14px;line-height:1}
+    label{display:block;font-size:.85rem;font-weight:500;margin-bottom:.4rem}
+    input[type="text"],textarea{width:100%;padding:.65rem .875rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);color:var(--text);font-size:.95rem;transition:border-color var(--tr),box-shadow var(--tr);resize:vertical}
+    input[type="text"]:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in oklch,var(--primary) 18%,transparent)}
+    textarea{min-height:90px}
+    .field{margin-bottom:1rem}
+    .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.25rem;border-radius:var(--radius);font-size:.9rem;font-weight:500;transition:background var(--tr),transform var(--tr)}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:var(--primary-h)}
+    .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .btn-full{width:100%;justify-content:center}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+    .response-box{margin-top:1.25rem;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);display:none}
+    .response-box.visible{display:block}
+    .response-header{display:flex;align-items:center;gap:.5rem;padding:.65rem 1rem;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+    .response-dot{width:8px;height:8px;border-radius:50%;background:var(--success)}
+    .response-dot.error{background:var(--error)}
+    .response-body{padding:1rem 1.25rem;font-size:.925rem;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    .skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s ease-in-out infinite;border-radius:4px;height:1em;margin-bottom:.5rem}
+    .skeleton:last-child{width:55%}
+    .quick-label{font-size:.78rem;color:var(--text-muted);font-weight:500;margin-bottom:.5rem}
+    .quick-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+    .quick-btn{padding:.35rem .75rem;border:1px solid var(--border);border-radius:999px;font-size:.8rem;color:var(--text-muted);background:var(--surface-2);transition:border-color var(--tr),color var(--tr),background var(--tr)}
+    .quick-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-hl)}
+    @media(max-width:480px){.card{padding:1.25rem}.app{padding:1.25rem 1rem 3rem}}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="logo">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="Logo">
+        <rect width="32" height="32" rx="8" fill="var(--primary)"/>
+        <rect x="8" y="10" width="10" height="2" rx="1" fill="white"/>
+        <rect x="8" y="15" width="16" height="2" rx="1" fill="white"/>
+        <rect x="8" y="20" width="12" height="2" rx="1" fill="white"/>
+        <circle cx="24" cy="10" r="3" fill="white" opacity="0.9"/>
+        <path d="M23 10l1 1 2-2" stroke="#01696f" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <div class="logo-text">ContratoIA</div>
+        <div class="logo-sub">Gestión inteligente de contratos</div>
+      </div>
+    </div>
+    <button class="theme-btn" data-theme-toggle aria-label="Cambiar tema">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" role="tab" aria-selected="true"  onclick="switchTab('upload')">📄 Cargar Contrato</button>
+    <button class="tab"        role="tab" aria-selected="false" onclick="switchTab('query')">💬 Consultar Contratos</button>
+  </div>
+
+  <!-- PANEL 1: CARGAR -->
+  <div class="panel active" id="panel-upload">
+    <div class="card">
+      <div class="card-title">Subir contrato</div>
+      <div class="card-desc">Carga el archivo del contrato. El sistema lo procesará, extraerá el texto, fechas y cláusulas automáticamente.</div>
+
+      <div class="upload-zone" id="dropzone"
+           ondragover="handleDragOver(event)" ondragleave="handleDragLeave()" ondrop="handleDrop(event)">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.mp3,.wav,.ogg,.m4a" onchange="handleFileSelect(event)" />
+        <div class="upload-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <div class="upload-title">Arrastra tu archivo aquí</div>
+        <div class="upload-hint">o haz clic para buscar — PDF, Word (.docx), Audio (MP3, WAV)</div>
+        <div id="fileChip"></div>
+      </div>
+
+      <div style="margin-top:1.25rem">
+        <div class="field">
+          <label for="entidad">Entidad / Cliente <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label>
+          <input type="text" id="entidad" placeholder="Ej. Ministerio de Educación" />
+        </div>
+        <div class="field">
+          <label for="proveedor">Proveedor <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label>
+          <input type="text" id="proveedor" placeholder="Ej. Empresa ABC S.A.S." />
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="uploadBtn" onclick="uploadContract()" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Subir y procesar contrato
+      </button>
+
+      <div class="response-box" id="uploadResponse">
+        <div class="response-header">
+          <div class="response-dot" id="uploadDot"></div>
+          <span id="uploadResponseLabel">Resultado</span>
+        </div>
+        <div class="response-body" id="uploadResponseBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: CONSULTAR -->
+  <div class="panel" id="panel-query">
+    <div class="card">
+      <div class="card-title">Hacer una consulta</div>
+      <div class="card-desc">Pregúntale al sistema sobre los contratos cargados. Usa lenguaje natural.</div>
+
+      <div class="quick-label">Preguntas frecuentes</div>
+      <div class="quick-list">
+        <button class="quick-btn" onclick="setQuestion('¿Qué contratos vencen pronto?')">📅 ¿Qué contratos vencen pronto?</button>
+        <button class="quick-btn" onclick="setQuestion('¿Qué contratos ya cerraron?')">✅ ¿Qué contratos ya cerraron?</button>
+        <button class="quick-btn" onclick="setQuestion('¿Cuáles son las cláusulas más importantes?')">📋 Cláusulas importantes</button>
+        <button class="quick-btn" onclick="setQuestion('Lista todos los contratos activos')">📂 Contratos activos</button>
+      </div>
+
+      <div class="field">
+        <label for="queryInput">Tu pregunta</label>
+        <textarea id="queryInput" placeholder="Ej. Analiza las cláusulas del contrato con Empresa ABC..." oninput="toggleQueryBtn()"></textarea>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="queryBtn" onclick="sendQuery()" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+        Enviar pregunta
+      </button>
+
+      <div class="response-box" id="queryResponse">
+        <div class="response-header">
+          <div class="response-dot" id="queryDot"></div>
+          <span>Respuesta del sistema</span>
+        </div>
+        <div class="response-body" id="queryResponseBody"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  URLs de los webhooks n8n                                       ║
+// ║  LOCAL:      http://localhost:5678/webhook/...                  ║
+// ║  PRODUCCION: https://[tu-n8n-en-railway].railway.app/webhook/...║
+// ╚══════════════════════════════════════════════════════════════════╝
+const WEBHOOK_UPLOAD = "http://localhost:5678/webhook/subir-contrato";
+const WEBHOOK_QUERY  = "http://localhost:5678/webhook/consultar";
+
+// Dark mode
+(function(){
+  const btn=document.querySelector('[data-theme-toggle]'),root=document.documentElement;
+  let dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  root.setAttribute('data-theme',dark?'dark':'light');
+  const moon='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  const sun='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  btn.innerHTML=dark?sun:moon;
+  btn.addEventListener('click',()=>{dark=!dark;root.setAttribute('data-theme',dark?'dark':'light');btn.innerHTML=dark?sun:moon;});
+})();
+
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const a=['upload','query'][i]===n;
+    t.classList.toggle('active',a);t.setAttribute('aria-selected',a);
+  });
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+n));
+}
+
+let selectedFile=null;
+function handleFileSelect(e){setFile(e.target.files[0]);}
+function handleDragOver(e){e.preventDefault();document.getElementById('dropzone').classList.add('dragover');}
+function handleDragLeave(){document.getElementById('dropzone').classList.remove('dragover');}
+function handleDrop(e){e.preventDefault();document.getElementById('dropzone').classList.remove('dragover');if(e.dataTransfer.files[0])setFile(e.dataTransfer.files[0]);}
+function setFile(f){
+  selectedFile=f;
+  document.getElementById('fileChip').innerHTML=`<div class="file-chip"><span>📎 ${f.name}</span><button onclick="clearFile(event)" aria-label="Quitar">✕</button></div>`;
+  document.getElementById('uploadBtn').disabled=false;
+}
+function clearFile(e){
+  e.stopPropagation();selectedFile=null;
+  document.getElementById('fileChip').innerHTML='';
+  document.getElementById('fileInput').value='';
+  document.getElementById('uploadBtn').disabled=true;
+}
+function setQuestion(q){const ta=document.getElementById('queryInput');ta.value=q;ta.focus();toggleQueryBtn();}
+function toggleQueryBtn(){document.getElementById('queryBtn').disabled=!document.getElementById('queryInput').value.trim();}
+
+function showSkeleton(id){document.getElementById(id).innerHTML='<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';}
+function showResponse(boxId,dotId,labelId,text,isError){
+  const dot=document.getElementById(dotId),body=document.getElementById(boxId+'Body');
+  if(labelId){const l=document.getElementById(labelId);if(l)l.textContent=isError?'Error':'Procesado correctamente';}
+  dot.className='response-dot'+(isError?' error':'');
+  body.textContent=text;
+  document.getElementById(boxId).classList.add('visible');
+}
+
+async function uploadContract(){
+  if(!selectedFile)return;
+  const btn=document.getElementById('uploadBtn');
+  btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Procesando...';
+  document.getElementById('uploadResponse').classList.add('visible');
+  showSkeleton('uploadResponseBody');
+  try{
+    const form=new FormData();
+    form.append('file',selectedFile);
+    form.append('entidad',document.getElementById('entidad').value.trim());
+    form.append('proveedor',document.getElementById('proveedor').value.trim());
+    const res=await fetch(WEBHOOK_UPLOAD,{method:'POST',body:form});
+    const data=await res.json().catch(()=>({mensaje:'Contrato recibido y en procesamiento.'}));
+    showResponse('uploadResponse','uploadDot','uploadResponseLabel',data.mensaje||data.message||data.output||JSON.stringify(data,null,2),!res.ok);
+  }catch(err){
+    showResponse('uploadResponse','uploadDot','uploadResponseLabel','⚠️ No se pudo conectar con n8n.\n\nVerifica que el webhook esté activo y que WEBHOOK_UPLOAD sea la URL correcta.\n\nDetalle: '+err.message,true);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Subir y procesar contrato';
+  }
+}
+
+async function sendQuery(){
+  const q=document.getElementById('queryInput').value.trim();if(!q)return;
+  const btn=document.getElementById('queryBtn');
+  btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Consultando...';
+  document.getElementById('queryResponse').classList.add('visible');
+  showSkeleton('queryResponseBody');
+  try{
+    const res=await fetch(WEBHOOK_QUERY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+    const data=await res.json().catch(()=>({respuesta:'Consulta recibida.'}));
+    showResponse(
+  'queryResponse',
+  'queryDot',
+  null,
+  typeof data === 'string'
+    ? data
+    : data.respuesta 
+      || data.choices?.[0]?.message?.content
+      || JSON.stringify(data, null, 2),
+  !res.ok
+);
+  }catch(err){
+    showResponse('queryResponse','queryDot',null,'⚠️ No se pudo conectar con n8n.\n\nVerifica que el webhook esté activo y que WEBHOOK_QUERY sea la URL correcta.\n\nDetalle: '+err.message,true);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar pregunta';
+  }
+}
+
+document.getElementById('queryInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.ctrlKey)sendQuery();});
+</script>
+</body>
+</html>

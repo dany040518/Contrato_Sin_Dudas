@@ -1,0 +1,245 @@
+{
+  "name": "Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "836ef2b4-0573-48c9-8e79-1b1340960053",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "contract_chunks"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e95a756f-3d72-47fc-976a-ffe2062ee54e",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dUtfL2dAa4eF2Hnh",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const groups = {};\n\nfor (const item of $input.all()) {\n  const { contract_id, chunk } = item.json;\n  if (!groups[contract_id]) groups[contract_id] = [];\n  groups[contract_id].push(chunk);\n}\n\nreturn Object.entries(groups).map(([contract_id, chunks]) => ({\n  json: {\n    contract_id,\n    full_text: chunks.join(' ')\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "bd2c8198-a39e-46a7-95c3-0aaba0dda607",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un analista legal. Extrae SOLO las fechas de inicio y fin del contrato del siguiente texto.\\n\\nResponde ÚNICAMENTE con JSON válido, sin texto adicional:\\n{\\\"fecha_inicio\\\": \\\"YYYY-MM-DD\\\", \\\"fecha_fin\\\": \\\"YYYY-MM-DD\\\"}\\n\\nSi no encuentras una fecha, usa null.\\n\\nTexto:\\n{{ $json.full_text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "2c8d56f3-a2e2-4734-a67d-463102b232ca",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        208
+      ],
+      "id": "39230dc8-f697-4d93-b9cf-8e6382596213",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "pTs50KgFbmBIIGOj",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\ntoday.setUTCHours(0, 0, 0, 0);\nconst twoWeeks = new Date(today);\ntwoWeeks.setUTCDate(today.getUTCDate() + 14);\n\nconst alerts = [];\n\nfor (const item of $input.all()) {\n  const contract_id = item.json.contract_id || 'unknown';\n  const raw = item.json.output || '';\n\n  let dates = {};\n  try {\n    const match = raw.match(/\\{[\\s\\S]*\\}/);\n    if (match) dates = JSON.parse(match[0]);\n  } catch (e) {}\n\n  const { fecha_inicio, fecha_fin } = dates;\n\n  const start = fecha_inicio ? new Date(fecha_inicio) : null;\n  const end   = fecha_fin   ? new Date(fecha_fin)   : null;\n\n  if (start && start >= today && start <= twoWeeks) {\n    alerts.push({ json: {\n      contract_id,\n      tipo_alerta: 'Inicio proximo',\n      fecha: fecha_inicio,\n      mensaje: `Contrato ${contract_id} INICIA el ${fecha_inicio}.`\n    }});\n  }\n\n  if (end && end >= today && end <= twoWeeks) {\n    alerts.push({ json: {\n      contract_id,\n      tipo_alerta: 'Vencimiento proximo',\n      fecha: fecha_fin,\n      mensaje: `Contrato ${contract_id} VENCE el ${fecha_fin}.`\n    }});\n  }\n}\n\nreturn alerts;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1536,
+        0
+      ],
+      "id": "410a16de-8869-49d7-8ed6-b6fdff9b89dd",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "sendTo": "rosario.lozanodm@gmail.com",
+        "subject": "Contrato por iniciar/terminar",
+        "emailType": "text",
+        "message": "={{ $json.mensaje }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1824,
+        0
+      ],
+      "id": "9c298735-d86a-4d85-aba8-508dac56e358",
+      "name": "Send a message",
+      "webhookId": "fdbca43d-3bc7-4973-bcc2-bcfb175f8923",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tey4PHNhtA4eqEq8",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1136,
+        -160
+      ],
+      "id": "577a6345-edc5-4031-b9a4-494ba15c527a",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0fb85ea6-0815-40c4-928e-32db1b6e152c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6decbedd736d9e51bcde5b0f49cc961471265f23ed79e037062cf601e9ea7684"
+  },
+  "id": "ri2mx5IUyBdm0Qec",
+  "tags": []
+}

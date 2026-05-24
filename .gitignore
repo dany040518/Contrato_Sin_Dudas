@@ -1,0 +1,26 @@
+# Variables de entorno — NUNCA subir al repo
+.env
+.env.local
+.env.production
+
+# Supabase CLI archivos temporales (contienen project-ref y URLs internas)
+supabase/.temp/
+
+# Directorio del repo anidado (tiene su propio git)
+Contrato_Sin_Dudas/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (si se agrega un proyecto Node/Next.js después)
+node_modules/
+.next/
+dist/
+build/

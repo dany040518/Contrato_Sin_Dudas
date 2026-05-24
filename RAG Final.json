@@ -1,0 +1,315 @@
+{
+  "name": "RAG Final",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consultar",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        0
+      ],
+      "id": "a18a1044-accf-4174-99aa-dda188cf4ff4",
+      "name": "Webhook",
+      "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/embeddings",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENROUTER_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "openai/text-embedding-3-small"
+            },
+            {
+              "name": "input",
+              "value": "={{$json.body.question}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -512,
+        0
+      ],
+      "id": "43bcf217-9468-4088-a316-5221273683c5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://rnrtfnzpdghlzsmjxzxr.supabase.co/rest/v1/rpc/match_contract_chunks",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query_embedding",
+              "value": "={{ $json.data[0].embedding }}"
+            },
+            {
+              "name": "match_count",
+              "value": "10"
+            },
+            {
+              "name": "filter_contract_id",
+              "value": "={{ $json.contract_id || null }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "45cddfb1-2c82-4434-9f87-25f73d091a33",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst context = items\n  .map(i => \n    `CONTRATO ID: ${i.json.contract_id}\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\nCONTENIDO:\n${i.json.chunk}`\n  )\n  .join(\"\\n\\n====================\\n\\n\");\n\nreturn [\n  {\n    json: {\n      context,\n      question: $('Webhook').first().json.body.question\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "839bf82a-9665-44c8-88b1-152e8a485fbb",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENROUTER_API_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  model: \"meta-llama/llama-3-8b-instruct\",\n  messages: [\n    {\n      role: \"system\",\n      content: `Eres un analista experto en contratos legales de cualquier tipo.\n\nTu tarea es interpretar correctamente la información del contrato. Puedes recibir múltiples contratos.\n\nReglas importantes:\n- Identifica el tipo de contrato (arrendamiento, compraventa, servicio, etc.)\n- NO sumes valores a menos que explícitamente se pida\n- Distingue entre:\n  - canon / precio principal\n  - depósitos / garantías\n  - pagos adicionales\n- Responde SOLO con la información solicitada\n- Si la pregunta es ambigua, elige el valor más relevante según el contexto legal\n- Si no encuentras la respuesta → \"NO_ENCONTRADO\"\n- Puedes comparar entre contratos\n- Si hay varios resultados, menciónalos\n- Si la pregunta es general, responde usando todos\n- No inventes información\n`\n    },\n    {\n      role: \"user\",\n      content: `CONTEXTO:\n${$json.context}\n\nPREGUNTA:\n${$json.question}\n\nResponde de forma directa:`\n    }\n  ]\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        32,
+        0
+      ],
+      "id": "23362b10-c202-405a-9af6-c3a54957e0a7",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "path": "consultar",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -720,
+        208
+      ],
+      "id": "45fef611-d897-4e69-8ebe-ca2fbbfb8f29",
+      "name": "Webhook1",
+      "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
+    },
+    {
+      "parameters": {
+        "jsCode": "{{ { status: \"ok\" } }}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        208
+      ],
+      "id": "c0087e29-7742-420d-9a30-05b59fc52502",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  respuesta: $json.choices?.[0]?.message?.content \n    || $json.output \n    || \"No se pudo generar respuesta\"\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        240,
+        0
+      ],
+      "id": "c1c2a99b-8cab-48f5-b864-36ba88432f4e",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1a0c58f1-3429-4a04-a4ac-3253fb4ddc18",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "05505f842bd4bec51567951bdbcfc2714196498c69154b0f40b0997fd38ae7e7"
+  },
+  "id": "4LUSumdMCWxD49I7",
+  "tags": []
+}
