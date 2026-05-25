@@ -1,4 +1,4 @@
-# 📄 Guía para Dummies — Contrato Sin Dudas
+# Guía para Dummies - Contrato Sin Dudas
 
 > **Versión:** 1.0 · **Idioma:** Español · **Para:** Cualquier persona, sin importar si sabe o no de tecnología
 
@@ -12,7 +12,7 @@ Solo tienes que subir tu contrato en PDF y hacerle preguntas como si estuvieras 
 
 Piénsalo así: es como tener un asistente inteligente que leyó todo el contrato antes que tú y está listo para explicarte cualquier parte que no entiendas.
 
-🔗 **Enlace de la plataforma:** [https://contrato-sin-dudas.vercel.app/](https://contrato-sin-dudas.vercel.app/)
+**Enlace de la plataforma:** [https://contrato-sin-dudas.vercel.app/](https://contrato-sin-dudas.vercel.app/)
 
 ---
 
