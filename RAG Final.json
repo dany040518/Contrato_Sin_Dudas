@@ -1,5 +1,11 @@
 {
+  "updatedAt": "2026-05-24T22:31:34.798Z",
+  "createdAt": "2026-05-24T22:23:28.465Z",
+  "id": "CMZvbXexYG6h9AAf",
   "name": "RAG Final",
+  "description": null,
+  "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
@@ -28,10 +34,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -720,
-        0
+        -128,
+        -160
       ],
-      "id": "a18a1044-accf-4174-99aa-dda188cf4ff4",
+      "id": "81449e2d-764f-4893-8b2d-530cb64ad32f",
       "name": "Webhook",
       "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
     },
@@ -70,10 +76,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -512,
-        0
+        80,
+        -160
       ],
-      "id": "43bcf217-9468-4088-a316-5221273683c5",
+      "id": "8fac4772-b092-45f4-9526-d8a004d56749",
       "name": "HTTP Request"
     },
     {
@@ -119,23 +125,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -320,
-        0
+        272,
+        -160
       ],
-      "id": "45cddfb1-2c82-4434-9f87-25f73d091a33",
+      "id": "8d6a41f0-a0be-4bda-ab77-0bee8a580102",
       "name": "HTTP Request1"
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\nconst context = items\n  .map(i => {\n    const label = (i.json.entidad || i.json.tipo)\n      ? `CONTRATO: ${[i.json.entidad, i.json.tipo].filter(Boolean).join(' — ')}`\n      : `FRAGMENTO DE CONTRATO`;\n    return `${label}\\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\\nCONTENIDO:\\n${i.json.chunk}`;\n  })\n  .join(\"\\n\\n====================\\n\\n\");\n\nreturn [\n  {\n    json: {\n      context,\n      question: $('Webhook').first().json.body.question\n    }\n  }\n];"
+        "jsCode": "const items = $input.all();\n\nconst context = items.map(i => {\n  const partes = [i.json.entidad, i.json.tipo]\n    .filter(v => v && v.trim() && v !== 'No especificado');\n  const label = partes.length > 0\n    ? `CONTRATO: ${partes.join(' — ')}`\n    : 'FRAGMENTO DE CONTRATO';\n  return `${label}\\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\\nCONTENIDO:\\n${i.json.chunk}`;\n}).join(\"\\n\\n====================\\n\\n\");\n\nreturn [{ json: { context, question: $('Webhook').first().json.body.question } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -144,
-        0
+        448,
+        -160
       ],
-      "id": "839bf82a-9665-44c8-88b1-152e8a485fbb",
+      "id": "96d17756-5d47-4cdc-8eb9-be058bbf4afd",
       "name": "Code in JavaScript"
     },
     {
@@ -157,16 +163,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ {\n  model: \"meta-llama/llama-3-8b-instruct\",\n  messages: [\n    {\n      role: \"system\",\n      content: `Eres un analista experto en contratos legales de cualquier tipo.\n\nTu tarea es interpretar correctamente la información del contrato. Puedes recibir múltiples contratos.\n\nReglas importantes:\n- Identifica el tipo de contrato (arrendamiento, compraventa, servicio, etc.)\n- NO sumes valores a menos que explícitamente se pida\n- Distingue entre:\n  - canon / precio principal\n  - depósitos / garantías\n  - pagos adicionales\n- Responde SOLO con la información solicitada\n- Si la pregunta es ambigua, elige el valor más relevante según el contexto legal\n- Si no encuentras la respuesta → \"NO_ENCONTRADO\"\n- Puedes comparar entre contratos\n- Si hay varios resultados, menciónalos\n- Si la pregunta es general, responde usando todos\n- No inventes información\n`\n    },\n    {\n      role: \"user\",\n      content: `CONTEXTO:\n${$json.context}\n\nPREGUNTA:\n${$json.question}\n\nResponde de forma directa:`\n    }\n  ]\n} }}",
+        "jsonBody": "={{ {\n  model: \"meta-llama/llama-3-8b-instruct\",\n  messages: [\n    {\n      role: \"system\",\n      content: `Eres un analista experto en contratos legales de cualquier tipo.\n\nREGLAS CRÍTICAS — FORMATO DE RESPUESTA:\n- NUNCA menciones IDs técnicos, UUIDs ni códigos internos (ej: \"4084074a-9a6f-...\"). Ignóralos aunque aparezcan en el contexto.\n- Identifica cada contrato por: tipo, entidad, proveedor o fechas.\n- Formato para referirte a un contrato: \"[Tipo] con [Entidad/Proveedor]\" o \"el contrato de [tipo]\"\n- Si hay varios contratos relevantes, menciónalos a todos con nombre comprensible.\n\nREGLAS DE ANÁLISIS:\n- NO sumes valores salvo que se pida explícitamente\n- Distingue: canon/precio principal vs depósitos/garantías vs pagos adicionales\n- Si no encuentras la respuesta → \"No encontré información sobre eso en los contratos disponibles\"\n- No inventes información que no esté en el contexto\n- Si la pregunta es general, responde usando todos los contratos disponibles\n`\n    },\n    {\n      role: \"user\",\n      content: `CONTEXTO:\n${$json.context}\n\nPREGUNTA:\n${$json.question}\n\nResponde de forma directa:`\n    }\n  ]\n} }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        32,
-        0
+        624,
+        -160
       ],
-      "id": "23362b10-c202-405a-9af6-c3a54957e0a7",
+      "id": "dff38d7a-9bc1-4114-a170-25c871196cde",
       "name": "HTTP Request2"
     },
     {
@@ -194,10 +200,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -720,
-        208
+        -128,
+        48
       ],
-      "id": "45fef611-d897-4e69-8ebe-ca2fbbfb8f29",
+      "id": "3cf9a23b-e1d8-4bf5-8cae-7a9160759542",
       "name": "Webhook1",
       "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
     },
@@ -208,10 +214,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -512,
-        208
+        80,
+        48
       ],
-      "id": "c0087e29-7742-420d-9a30-05b59fc52502",
+      "id": "fb390bb8-f4a8-4680-bfc0-3b1de66f29e6",
       "name": "Code in JavaScript1"
     },
     {
@@ -223,14 +229,13 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        240,
-        0
+        832,
+        -160
       ],
-      "id": "c1c2a99b-8cab-48f5-b864-36ba88432f4e",
+      "id": "44a94e72-1ada-40d0-b305-864fdb4171ae",
       "name": "Respond to Webhook"
     }
   ],
-  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -299,17 +304,353 @@
       ]
     }
   },
-  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "1a0c58f1-3429-4a04-a4ac-3253fb4ddc18",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "05505f842bd4bec51567951bdbcfc2714196498c69154b0f40b0997fd38ae7e7"
-  },
-  "id": "4LUSumdMCWxD49I7",
-  "tags": []
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "3f1e4a20-0a59-4cc2-8c0e-61a32004d937",
+  "activeVersionId": "3f1e4a20-0a59-4cc2-8c0e-61a32004d937",
+  "versionCounter": 7,
+  "triggerCount": 2,
+  "shared": [
+    {
+      "updatedAt": "2026-05-24T22:23:28.465Z",
+      "createdAt": "2026-05-24T22:23:28.465Z",
+      "role": "workflow:owner",
+      "workflowId": "CMZvbXexYG6h9AAf",
+      "projectId": "NoVGoDZ9XPHtGX5k",
+      "project": {
+        "updatedAt": "2026-05-24T22:20:29.651Z",
+        "createdAt": "2026-05-24T22:12:19.310Z",
+        "id": "NoVGoDZ9XPHtGX5k",
+        "name": "Danna Sanchez <dannasamo@unisabana.edu.co>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f3d9d4ee-4ac6-4f18-81a7-41e9fd38736a"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-24T23:30:15.137Z",
+    "createdAt": "2026-05-24T22:31:34.983Z",
+    "versionId": "3f1e4a20-0a59-4cc2-8c0e-61a32004d937",
+    "workflowId": "CMZvbXexYG6h9AAf",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "consultar",
+          "responseMode": "responseNode",
+          "options": {
+            "responseHeaders": {
+              "entries": [
+                {
+                  "name": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "name": "Access-Control-Allow-Methods",
+                  "value": "GET, POST, OPTIONS"
+                },
+                {
+                  "name": "Access-Control-Allow-Headers",
+                  "value": "Content-Type"
+                }
+              ]
+            }
+          }
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -128,
+          -160
+        ],
+        "id": "81449e2d-764f-4893-8b2d-530cb64ad32f",
+        "name": "Webhook",
+        "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://openrouter.ai/api/v1/embeddings",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_OPENROUTER_API_KEY"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "model",
+                "value": "openai/text-embedding-3-small"
+              },
+              {
+                "name": "input",
+                "value": "={{$json.body.question}}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          80,
+          -160
+        ],
+        "id": "8fac4772-b092-45f4-9526-d8a004d56749",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://rnrtfnzpdghlzsmjxzxr.supabase.co/rest/v1/rpc/match_contract_chunks",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "apikey",
+                "value": "YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "query_embedding",
+                "value": "={{ $json.data[0].embedding }}"
+              },
+              {
+                "name": "match_count",
+                "value": "10"
+              },
+              {
+                "name": "filter_contract_id",
+                "value": "={{ $json.contract_id || null }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          272,
+          -160
+        ],
+        "id": "8d6a41f0-a0be-4bda-ab77-0bee8a580102",
+        "name": "HTTP Request1"
+      },
+      {
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nconst context = items\n  .map(i => \n    `CONTRATO ID: ${i.json.contract_id}\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\nCONTENIDO:\n${i.json.chunk}`\n  )\n  .join(\"\\n\\n====================\\n\\n\");\n\nreturn [\n  {\n    json: {\n      context,\n      question: $('Webhook').first().json.body.question\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          -160
+        ],
+        "id": "96d17756-5d47-4cdc-8eb9-be058bbf4afd",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://openrouter.ai/api/v1/chat/completions",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_OPENROUTER_API_KEY"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ {\n  model: \"meta-llama/llama-3-8b-instruct\",\n  messages: [\n    {\n      role: \"system\",\n      content: `Eres un analista experto en contratos legales de cualquier tipo.\n\nTu tarea es interpretar correctamente la información del contrato. Puedes recibir múltiples contratos.\n\nReglas importantes:\n- Identifica el tipo de contrato (arrendamiento, compraventa, servicio, etc.)\n- NO sumes valores a menos que explícitamente se pida\n- Distingue entre:\n  - canon / precio principal\n  - depósitos / garantías\n  - pagos adicionales\n- Responde SOLO con la información solicitada\n- Si la pregunta es ambigua, elige el valor más relevante según el contexto legal\n- Si no encuentras la respuesta → \"NO_ENCONTRADO\"\n- Puedes comparar entre contratos\n- Si hay varios resultados, menciónalos\n- Si la pregunta es general, responde usando todos\n- No inventes información\n`\n    },\n    {\n      role: \"user\",\n      content: `CONTEXTO:\n${$json.context}\n\nPREGUNTA:\n${$json.question}\n\nResponde de forma directa:`\n    }\n  ]\n} }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          624,
+          -160
+        ],
+        "id": "dff38d7a-9bc1-4114-a170-25c871196cde",
+        "name": "HTTP Request2"
+      },
+      {
+        "parameters": {
+          "path": "consultar",
+          "options": {
+            "responseHeaders": {
+              "entries": [
+                {
+                  "name": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "name": "Access-Control-Allow-Methods",
+                  "value": "GET, POST, OPTIONS"
+                },
+                {
+                  "name": "Access-Control-Allow-Headers",
+                  "value": "Content-Type"
+                }
+              ]
+            }
+          }
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -128,
+          48
+        ],
+        "id": "3cf9a23b-e1d8-4bf5-8cae-7a9160759542",
+        "name": "Webhook1",
+        "webhookId": "941e716c-e753-4cf1-a8c7-b67fc9806dfc"
+      },
+      {
+        "parameters": {
+          "jsCode": "{{ { status: \"ok\" } }}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          80,
+          48
+        ],
+        "id": "fb390bb8-f4a8-4680-bfc0-3b1de66f29e6",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ {\n  respuesta: $json.choices?.[0]?.message?.content \n    || $json.output \n    || \"No se pudo generar respuesta\"\n} }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          832,
+          -160
+        ],
+        "id": "44a94e72-1ada-40d0-b305-864fdb4171ae",
+        "name": "Respond to Webhook"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request2": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Danna Sanchez",
+    "name": "Version 3f1e4a20",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-24T23:30:15.094Z",
+        "id": 2,
+        "workflowId": "CMZvbXexYG6h9AAf",
+        "versionId": "3f1e4a20-0a59-4cc2-8c0e-61a32004d937",
+        "event": "activated",
+        "userId": "f3d9d4ee-4ac6-4f18-81a7-41e9fd38736a"
+      }
+    ]
+  }
 }

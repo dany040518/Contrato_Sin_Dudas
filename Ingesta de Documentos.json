@@ -1,37 +1,26 @@
 {
+  "updatedAt": "2026-05-25T00:25:52.817Z",
+  "createdAt": "2026-05-24T22:24:32.326Z",
+  "id": "3X9svE5pCaBFH1ux",
   "name": "Ingesta de Documentos",
+  "description": null,
+  "active": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "subir-contrato",
         "responseMode": "responseNode",
-        "options": {
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "Access-Control-Allow-Origin",
-                "value": "*"
-              },
-              {
-                "name": "Access-Control-Allow-Methods",
-                "value": "POST, OPTIONS"
-              },
-              {
-                "name": "Access-Control-Allow-Headers",
-                "value": "Content-Type"
-              }
-            ]
-          }
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -416,
-        -96
+        -1264,
+        144
       ],
-      "id": "3144a53f-a337-4030-89f4-734ad72f2641",
+      "id": "f6190217-16d2-40c7-9482-15ff33310ec8",
       "name": "Webhook",
       "webhookId": "2494191e-7cbb-4f9a-b155-f207d95efdde"
     },
@@ -44,10 +33,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1.1,
       "position": [
-        -112,
-        16
+        -960,
+        256
       ],
-      "id": "5fb739cc-949b-4554-978d-19d9d94a5472",
+      "id": "65f35765-b5e1-44d5-9822-821817de8524",
       "name": "Extract from File"
     },
     {
@@ -79,10 +68,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        80,
-        16
+        -768,
+        256
       ],
-      "id": "0c5a7f75-f2ca-443e-bcba-05d18b5e510c",
+      "id": "b3a58fe3-873f-41b3-8f80-88f37e748064",
       "name": "HTTP Request1"
     },
     {
@@ -111,10 +100,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -112,
-        -192
+        -960,
+        48
       ],
-      "id": "16cbc693-d0bb-47e6-ae6d-2236b39942d3",
+      "id": "fef6237f-6c22-47ab-bf87-219042df9d91",
       "name": "Upload to bucket",
       "alwaysOutputData": true
     },
@@ -125,10 +114,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        512,
-        -64
+        -336,
+        176
       ],
-      "id": "aa9f15fa-2255-420a-952b-8038ea30a609",
+      "id": "00def26e-3c8f-43cd-806a-e83d4f817e0d",
       "name": "Code in JavaScript"
     },
     {
@@ -159,10 +148,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        80,
-        -192
+        -768,
+        48
       ],
-      "id": "7d900f32-4e57-481f-94ed-a8203b40ebef",
+      "id": "01299577-c15d-42ba-ae1c-9b60348ebe79",
       "name": "If"
     },
     {
@@ -174,10 +163,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        352,
-        -64
+        -496,
+        176
       ],
-      "id": "bb782ad5-6490-45b1-8676-f16ffdc9a28e",
+      "id": "bfa412c1-ae6e-4b91-9c14-f0612c0e697e",
       "name": "Merge"
     },
     {
@@ -211,14 +200,14 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1808,
-        -64
+        960,
+        176
       ],
-      "id": "88896f29-d081-43e3-981f-6b1738dea205",
+      "id": "e51a2929-5b8e-4c16-b1f8-348a9b7d6156",
       "name": "Create a row",
       "credentials": {
         "supabaseApi": {
-          "id": "InI2G9HnFhfqdfaC",
+          "id": "emyQ1BeYACyp4JI9",
           "name": "Supabase account"
         }
       }
@@ -230,10 +219,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1168,
-        -64
+        320,
+        176
       ],
-      "id": "cd50ac4a-37e4-4720-a371-fde1d5837367",
+      "id": "22038783-57a5-4262-88b6-d32942d68368",
       "name": "Code in JavaScript1"
     },
     {
@@ -256,17 +245,17 @@
           ]
         }
       },
-      "id": "b9c9fae9-84d2-485f-a823-e1d60b9fe6e3",
+      "id": "1769ed58-ee7d-44ad-9d3b-421a14a3c9e0",
       "name": "Guardar Archivo",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        848,
-        -64
+        0,
+        176
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "InI2G9HnFhfqdfaC",
+          "id": "emyQ1BeYACyp4JI9",
           "name": "Supabase account"
         }
       }
@@ -287,17 +276,17 @@
           ]
         }
       },
-      "id": "3710f7cd-6d19-42f2-a26d-e7f93022c911",
+      "id": "068ec2ff-d7d6-4ba7-95c7-2fe5c5a41a40",
       "name": "Guardar Texto",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1008,
-        -64
+        160,
+        176
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "InI2G9HnFhfqdfaC",
+          "id": "emyQ1BeYACyp4JI9",
           "name": "Supabase account"
         }
       }
@@ -334,17 +323,17 @@
           ]
         }
       },
-      "id": "5971f339-ca23-402a-9623-4493c9449a42",
+      "id": "0f2723aa-e3f7-4ece-9872-b22144f6bd58",
       "name": "Guardar Contrato",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        688,
-        -64
+        -160,
+        176
       ],
       "credentials": {
         "supabaseApi": {
-          "id": "InI2G9HnFhfqdfaC",
+          "id": "emyQ1BeYACyp4JI9",
           "name": "Supabase account"
         }
       }
@@ -367,10 +356,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        848,
-        -240
+        0,
+        0
       ],
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "id": "cde6576b-7a49-4496-bdb6-61453827fd99",
       "name": "Respond to Webhook"
     },
     {
@@ -408,10 +397,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1488,
-        -64
+        640,
+        176
       ],
-      "id": "f1e2d3c4-b5a6-7890-cdef-012345678901",
+      "id": "34b3d9b6-3a1b-4bec-885e-8b1b2f64ee02",
       "name": "Generar Embedding"
     },
     {
@@ -421,14 +410,13 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1648,
-        -64
+        800,
+        176
       ],
-      "id": "c2b3a4d5-e6f7-8901-bcde-f23456789012",
+      "id": "596210a4-e04e-4825-bad5-be0c6ff61fed",
       "name": "Extraer Embedding"
     }
   ],
-  "pinData": {},
   "connections": {
     "Webhook": {
       "main": [
@@ -584,17 +572,623 @@
       ]
     }
   },
-  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "bd04374e-c887-48c6-978d-3bc1f9279686",
+  "staticData": null,
   "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "05505f842bd4bec51567951bdbcfc2714196498c69154b0f40b0997fd38ae7e7"
+    "templateCredsSetupCompleted": true
   },
-  "id": "WAwqavuCcj8dJ1ZM",
-  "tags": []
+  "pinData": {},
+  "versionId": "53b17be2-a52d-4bb5-9ddc-64ea7e3d0d60",
+  "activeVersionId": "53b17be2-a52d-4bb5-9ddc-64ea7e3d0d60",
+  "versionCounter": 13,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-05-24T22:24:32.326Z",
+      "createdAt": "2026-05-24T22:24:32.326Z",
+      "role": "workflow:owner",
+      "workflowId": "3X9svE5pCaBFH1ux",
+      "projectId": "NoVGoDZ9XPHtGX5k",
+      "project": {
+        "updatedAt": "2026-05-24T22:20:29.651Z",
+        "createdAt": "2026-05-24T22:12:19.310Z",
+        "id": "NoVGoDZ9XPHtGX5k",
+        "name": "Danna Sanchez <dannasamo@unisabana.edu.co>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "f3d9d4ee-4ac6-4f18-81a7-41e9fd38736a"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-05-25T00:25:53.003Z",
+    "createdAt": "2026-05-25T00:25:53.003Z",
+    "versionId": "53b17be2-a52d-4bb5-9ddc-64ea7e3d0d60",
+    "workflowId": "3X9svE5pCaBFH1ux",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "subir-contrato",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -1264,
+          144
+        ],
+        "id": "f6190217-16d2-40c7-9482-15ff33310ec8",
+        "name": "Webhook",
+        "webhookId": "2494191e-7cbb-4f9a-b155-f207d95efdde"
+      },
+      {
+        "parameters": {
+          "operation": "pdf",
+          "binaryPropertyName": "file",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1.1,
+        "position": [
+          -960,
+          256
+        ],
+        "id": "65f35765-b5e1-44d5-9822-821817de8524",
+        "name": "Extract from File"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://openrouter.ai/api/v1/chat/completions",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_OPENROUTER_API_KEY"
+              },
+              {
+                "name": "HTTP-Referer",
+                "value": "https://n8n.local"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ {\n  \"model\": \"openai/gpt-4o-mini\",\n  messages: [\n    {\n      role: \"user\",\n      content: \"Eres un analista legal experto en contratos.\\n\\nTu tarea es EXTRAER información estructurada del contrato.\\n\\nREGLAS:\\n- Responde SOLO en JSON válido\\n- NO agregues texto fuera del JSON\\n- Si no encuentras un dato explícito, dedúcelo del contexto del contrato\\n- Si definitivamente no existe, usa null\\n- Fechas en formato YYYY-MM-DD\\n- Valor numérico sin símbolos\\n\\nJSON esperado:\\n{\\n  \\\"entidad\\\": \\\"\\\",\\n  \\\"proveedor\\\": \\\"\\\",\\n  \\\"tipo\\\": \\\"\\\",\\n  \\\"valor\\\": 0,\\n  \\\"fecha_inicio\\\": \\\"YYYY-MM-DD\\\",\\n  \\\"fecha_fin\\\": \\\"YYYY-MM-DD\\\",\\n  \\\"duracion_meses\\\": 0,\\n  \\\"resumen\\\": \\\"\\\",\\n  \\\"clausulas_clave\\\": []\\n}\\n\\nContrato:\\n\" + $json.text\n    }\n  ],\n  temperature: 0\n} }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -768,
+          256
+        ],
+        "id": "b3a58fe3-873f-41b3-8f80-88f37e748064",
+        "name": "HTTP Request1"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://rnrtfnzpdghlzsmjxzxr.supabase.co/storage/v1/object/contracts/{{ $('Webhook').item.binary.file.fileName.replace(/\\s+/g, '_').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/[^a-zA-Z0-9._-]/g, '_') + '.pdf' }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_SUPABASE_STORAGE_KEY"
+              },
+              {
+                "name": "apikey",
+                "value": "YOUR_SUPABASE_STORAGE_KEY"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "raw",
+          "rawContentType": "application/pdf",
+          "body": "={{ $('Webhook').item.binary.file.data }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -960,
+          48
+        ],
+        "id": "fef6237f-6c22-47ab-bf87-219042df9d91",
+        "name": "Upload to bucket",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "jsCode": "const contractId = 'C-' + Date.now();\n\n// archivo\nconst fileName = $('Webhook').item.binary.file.fileName;\nconst fileUrl = `https://rnrtfnzpdghlzsmjxzxr.supabase.co/storage/v1/object/public/contracts/${fileName}`;\n\n// texto OCR\nconst fullText = $('Extract from File').item.json.text;\n\n// respuesta IA\nlet aiData = {};\n\ntry {\n  const rawResponse = $('HTTP Request1').item.json.choices?.[0]?.message?.content || '';\n  const match = rawResponse.match(/\\{[\\s\\S]*\\}/);\n\n  if (match) {\n    aiData = JSON.parse(match[0]);\n  }\n\n} catch (e) {\n  aiData = {};\n}\n\n// limpiar número\nconst safeNumber = (val) => {\n  if (!val) return null;\n  const num = Number(val.toString().replace(/[^\\d.-]/g, ''));\n  return isNaN(num) ? null : num;\n};\n\nreturn [{\n  json: {\n    // 🔑 contracts\n    entidad: aiData.entidad || 'No especificado',\n    proveedor: aiData.proveedor || 'No especificado',\n    tipo: aiData.tipo || 'No especificado',\n    valor: safeNumber(aiData.valor),\n    fecha_inicio: aiData.fecha_inicio || null,\n    fecha_fin: aiData.fecha_fin || null,\n\n    // 📁 contract_files\n    contract_id: contractId,\n    file_name: fileName,\n    file_url: fileUrl,\n\n    // 📄 contract_texts\n    full_text: fullText\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -336,
+          176
+        ],
+        "id": "00def26e-3c8f-43cd-806a-e83d4f817e0d",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            },
+            "conditions": [
+              {
+                "id": "f449f255-cd91-45df-baf6-38c7e17cfb66",
+                "leftValue": "={{ $json.error == null }}",
+                "rightValue": "200",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          -768,
+          48
+        ],
+        "id": "01299577-c15d-42ba-ae1c-9b60348ebe79",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "combineBy": "combineByPosition",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -496,
+          176
+        ],
+        "id": "bfa412c1-ae6e-4b91-9c14-f0612c0e697e",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "tableId": "contract_chunks",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "contract_id",
+                "fieldValue": "={{ $json.contract_id }}"
+              },
+              {
+                "fieldId": "chunk",
+                "fieldValue": "={{ $json.chunk }}"
+              },
+              {
+                "fieldId": "embeddings",
+                "fieldValue": "={{ $json.embeddings }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          960,
+          176
+        ],
+        "id": "e51a2929-5b8e-4c16-b1f8-348a9b7d6156",
+        "name": "Create a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "emyQ1BeYACyp4JI9",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const chunkSize = 300;\n\nlet result = [];\n\nfor (const item of $input.all()) {\n\n  const text = item.json.full_text || \"\";\n  const contractId = item.json.contract_id;\n\n  if (!text || !contractId) continue;\n\n  const words = text.split(\" \");\n\n  for (let i = 0; i < words.length; i += chunkSize) {\n    result.push({\n      json: {\n        contract_id: contractId,\n        chunk: words.slice(i, i + chunkSize).join(\" \")\n      }\n    });\n  }\n}\n\nreturn result;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          176
+        ],
+        "id": "22038783-57a5-4262-88b6-d32942d68368",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "tableId": "contract_files",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "file_name",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.file_name }}"
+              },
+              {
+                "fieldId": "file_url",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.file_url }}"
+              },
+              {
+                "fieldId": "contract_id",
+                "fieldValue": "={{ $json.id }}"
+              }
+            ]
+          }
+        },
+        "id": "1769ed58-ee7d-44ad-9d3b-421a14a3c9e0",
+        "name": "Guardar Archivo",
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          0,
+          176
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "emyQ1BeYACyp4JI9",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "contract_texts",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "contract_id",
+                "fieldValue": "={{ $('Guardar Contrato').item.json.id }}"
+              },
+              {
+                "fieldId": "full_text",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.full_text }}"
+              }
+            ]
+          }
+        },
+        "id": "068ec2ff-d7d6-4ba7-95c7-2fe5c5a41a40",
+        "name": "Guardar Texto",
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          160,
+          176
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "emyQ1BeYACyp4JI9",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "contracts",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "entidad",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.entidad }}"
+              },
+              {
+                "fieldId": "proveedor",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.proveedor }}"
+              },
+              {
+                "fieldId": "tipo",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.tipo }}"
+              },
+              {
+                "fieldId": "valor",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.valor }}"
+              },
+              {
+                "fieldId": "fecha_inicio",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.fecha_inicio }}"
+              },
+              {
+                "fieldId": "fecha_fin",
+                "fieldValue": "={{ $('Code in JavaScript').item.json.fecha_fin }}"
+              }
+            ]
+          }
+        },
+        "id": "0f2723aa-e3f7-4ece-9872-b22144f6bd58",
+        "name": "Guardar Contrato",
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -160,
+          176
+        ],
+        "credentials": {
+          "supabaseApi": {
+            "id": "emyQ1BeYACyp4JI9",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ { mensaje: \"Contrato procesado correctamente. Los datos han sido guardados y los fragmentos están siendo indexados para búsqueda.\" } }}",
+          "options": {
+            "responseHeaders": {
+              "entries": [
+                {
+                  "name": "Access-Control-Allow-Origin",
+                  "value": "*"
+                }
+              ]
+            }
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          0,
+          0
+        ],
+        "id": "cde6576b-7a49-4496-bdb6-61453827fd99",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://openrouter.ai/api/v1/embeddings",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer YOUR_OPENROUTER_API_KEY"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "model",
+                "value": "openai/text-embedding-3-small"
+              },
+              {
+                "name": "input",
+                "value": "={{ $json.chunk }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          640,
+          176
+        ],
+        "id": "34b3d9b6-3a1b-4bec-885e-8b1b2f64ee02",
+        "name": "Generar Embedding"
+      },
+      {
+        "parameters": {
+          "jsCode": "return [{\n  json: {\n    contract_id: $('Code in JavaScript1').item.json.contract_id,\n    chunk: $('Code in JavaScript1').item.json.chunk,\n    embeddings: $input.item.json.data[0].embedding\n  }\n}];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          800,
+          176
+        ],
+        "id": "596210a4-e04e-4825-bad5-be0c6ff61fed",
+        "name": "Extraer Embedding"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Extract from File",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Upload to bucket",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Upload to bucket": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Guardar Contrato",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Generar Embedding",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Generar Embedding": {
+        "main": [
+          [
+            {
+              "node": "Extraer Embedding",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extraer Embedding": {
+        "main": [
+          [
+            {
+              "node": "Create a row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Guardar Archivo": {
+        "main": [
+          [
+            {
+              "node": "Guardar Texto",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Guardar Texto": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Guardar Contrato": {
+        "main": [
+          [
+            {
+              "node": "Guardar Archivo",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Danna Sanchez",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-25T00:25:53.844Z",
+        "id": 4,
+        "workflowId": "3X9svE5pCaBFH1ux",
+        "versionId": "53b17be2-a52d-4bb5-9ddc-64ea7e3d0d60",
+        "event": "deactivated",
+        "userId": "f3d9d4ee-4ac6-4f18-81a7-41e9fd38736a"
+      },
+      {
+        "createdAt": "2026-05-25T00:25:53.922Z",
+        "id": 5,
+        "workflowId": "3X9svE5pCaBFH1ux",
+        "versionId": "53b17be2-a52d-4bb5-9ddc-64ea7e3d0d60",
+        "event": "activated",
+        "userId": "f3d9d4ee-4ac6-4f18-81a7-41e9fd38736a"
+      }
+    ]
+  }
 }
