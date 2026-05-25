@@ -127,7 +127,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\n\nconst context = items\n  .map(i => \n    `CONTRATO ID: ${i.json.contract_id}\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\nCONTENIDO:\n${i.json.chunk}`\n  )\n  .join(\"\\n\\n====================\\n\\n\");\n\nreturn [\n  {\n    json: {\n      context,\n      question: $('Webhook').first().json.body.question\n    }\n  }\n];"
+        "jsCode": "const items = $input.all();\n\nconst context = items\n  .map(i => {\n    const label = (i.json.entidad || i.json.tipo)\n      ? `CONTRATO: ${[i.json.entidad, i.json.tipo].filter(Boolean).join(' — ')}`\n      : `FRAGMENTO DE CONTRATO`;\n    return `${label}\\nSIMILITUD: ${i.json.similarity?.toFixed(3) || 'N/A'}\\nCONTENIDO:\\n${i.json.chunk}`;\n  })\n  .join(\"\\n\\n====================\\n\\n\");\n\nreturn [\n  {\n    json: {\n      context,\n      question: $('Webhook').first().json.body.question\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

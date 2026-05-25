@@ -6,7 +6,24 @@
         "httpMethod": "POST",
         "path": "subir-contrato",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -179,6 +196,14 @@
             {
               "fieldId": "embeddings",
               "fieldValue": "={{ $json.embeddings }}"
+            },
+            {
+              "fieldId": "entidad",
+              "fieldValue": "={{ $json.entidad }}"
+            },
+            {
+              "fieldId": "tipo",
+              "fieldValue": "={{ $json.tipo }}"
             }
           ]
         }
@@ -200,7 +225,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const chunkSize = 300;\n\nlet result = [];\n\nfor (const item of $input.all()) {\n\n  const text = item.json.full_text || \"\";\n  const contractId = item.json.contract_id;\n\n  if (!text || !contractId) continue;\n\n  const words = text.split(\" \");\n\n  for (let i = 0; i < words.length; i += chunkSize) {\n    result.push({\n      json: {\n        contract_id: contractId,\n        chunk: words.slice(i, i + chunkSize).join(\" \")\n      }\n    });\n  }\n}\n\nreturn result;"
+        "jsCode": "const chunkSize = 300;\nlet result = [];\n\nconst entidad = $('Code in JavaScript').first().json.entidad || '';\nconst tipo = $('Code in JavaScript').first().json.tipo || '';\n\nfor (const item of $input.all()) {\n  const text = item.json.full_text || \"\";\n  const contractId = item.json.contract_id;\n\n  if (!text || !contractId) continue;\n\n  const words = text.split(\" \");\n\n  for (let i = 0; i < words.length; i += chunkSize) {\n    result.push({\n      json: {\n        contract_id: contractId,\n        chunk: words.slice(i, i + chunkSize).join(\" \"),\n        entidad: entidad,\n        tipo: tipo\n      }\n    });\n  }\n}\n\nreturn result;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -391,7 +416,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return [{\n  json: {\n    contract_id: $('Code in JavaScript1').item.json.contract_id,\n    chunk: $('Code in JavaScript1').item.json.chunk,\n    embeddings: $input.item.json.data[0].embedding\n  }\n}];"
+        "jsCode": "return [{\n  json: {\n    contract_id: $('Code in JavaScript1').item.json.contract_id,\n    chunk: $('Code in JavaScript1').item.json.chunk,\n    entidad: $('Code in JavaScript1').item.json.entidad,\n    tipo: $('Code in JavaScript1').item.json.tipo,\n    embeddings: $input.item.json.data[0].embedding\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,

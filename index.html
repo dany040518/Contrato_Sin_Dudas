@@ -200,6 +200,13 @@
 const WEBHOOK_UPLOAD = "https://n8n-production-da6e.up.railway.app/webhook/subir-contrato";
 const WEBHOOK_QUERY  = "https://n8n-production-da6e.up.railway.app/webhook/consultar";
 
+async function fetchWithTimeout(url, options, ms = 90000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  try { return await fetch(url, { ...options, signal: ctrl.signal }); }
+  finally { clearTimeout(id); }
+}
+
 // Dark mode
 (function(){
   const btn=document.querySelector('[data-theme-toggle]'),root=document.documentElement;
@@ -258,7 +265,7 @@ async function uploadContract(){
     form.append('file',selectedFile);
     form.append('entidad',document.getElementById('entidad').value.trim());
     form.append('proveedor',document.getElementById('proveedor').value.trim());
-    const res=await fetch(WEBHOOK_UPLOAD,{method:'POST',body:form});
+    const res=await fetchWithTimeout(WEBHOOK_UPLOAD,{method:'POST',body:form});
     const data=await res.json().catch(()=>({mensaje:'Contrato recibido y en procesamiento.'}));
     showResponse('uploadResponse','uploadDot','uploadResponseLabel',data.mensaje||data.message||data.output||JSON.stringify(data,null,2),!res.ok);
   }catch(err){
@@ -276,7 +283,7 @@ async function sendQuery(){
   document.getElementById('queryResponse').classList.add('visible');
   showSkeleton('queryResponseBody');
   try{
-    const res=await fetch(WEBHOOK_QUERY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+    const res=await fetchWithTimeout(WEBHOOK_QUERY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
     const data=await res.json().catch(()=>({respuesta:'Consulta recibida.'}));
     showResponse(
   'queryResponse',
