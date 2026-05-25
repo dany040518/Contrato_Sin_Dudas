@@ -44,20 +44,6 @@ Puedes usar **Contrato Sin Dudas** para:
 
 > 💡 **Consejo:** No necesitas crear una cuenta ni registrarte. La plataforma está disponible directamente.
 
----
-
-```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   [CAPTURA DE PANTALLA — PÁGINA PRINCIPAL]  │
-│                                             │
-│   Aquí se ve la pantalla de inicio con      │
-│   las dos pestañas principales.             │
-│                                             │
-└─────────────────────────────────────────────┘
-```
-
----
 
 ## Paso 2 — Subir un contrato
 
@@ -85,21 +71,6 @@ Una vez dentro de la plataforma, lo primero que debes hacer es subir el contrato
 ---
 
 > ⚠️ **IMPORTANTE:** No cierres la pestaña del navegador mientras el archivo se está procesando. Si lo cierras, tendrás que volver a subir el contrato.
-
----
-
-```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   [CAPTURA DE PANTALLA — SUBIR ARCHIVO]     │
-│                                             │
-│   Aquí se ve el recuadro de carga con el    │
-│   botón "Subir y procesar contrato".        │
-│                                             │
-└─────────────────────────────────────────────┘
-```
-
----
 
 ### ¿Qué tipo de archivos puedo subir?
 
@@ -129,22 +100,6 @@ Una vez que tu contrato está cargado, puedes hacerle preguntas en lenguaje norm
 5. Espera unos segundos mientras el sistema busca la respuesta.
 
 6. La respuesta aparecerá justo debajo del botón.
-
----
-
-```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   [CAPTURA DE PANTALLA — HACER PREGUNTAS]   │
-│                                             │
-│   Aquí se ve la caja de texto y el botón   │
-│   "Enviar pregunta" con una respuesta       │
-│   de ejemplo visible.                       │
-│                                             │
-└─────────────────────────────────────────────┘
-```
-
----
 
 ### Ejemplos de preguntas que puedes hacer
 
@@ -214,21 +169,6 @@ Así se ve una consulta típica dentro de la plataforma:
 
 **🤖 Sistema responde:**
 > El contrato es entre **AgroServicios S.A.S.** como proveedor y **Cooperativa El Campo** como entidad contratante.
-
----
-
-```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   [CAPTURA DE PANTALLA — RESPUESTAS]        │
-│                                             │
-│   Aquí se ve una pregunta real con su       │
-│   respuesta completa del sistema.           │
-│                                             │
-└─────────────────────────────────────────────┘
-```
-
----
 
 ## 💡 Consejos útiles
 
